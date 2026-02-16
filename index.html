@@ -5,6 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>🐴 新春送福 | 马年大吉</title>
   <style>
+    :root {
+      --primary: #1a1a2e;
+      --accent: #e94560;
+      --gold: #ffd700;
+      --glass: rgba(255, 255, 255, 0.1);
+      --glass-border: rgba(255, 255, 255, 0.2);
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -14,11 +22,80 @@
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
       min-height: 100vh;
-      background: linear-gradient(180deg, #8B0000 0%, #DC143C 30%, #FF4500 70%, #FFD700 100%);
+      background: var(--primary);
       overflow-x: hidden;
     }
 
-    /* 红灯笼 */
+    /* 动态背景 */
+    .bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .bg::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: 
+        radial-gradient(ellipse at 20% 80%, rgba(233, 69, 96, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(233, 69, 96, 0.05) 0%, transparent 70%);
+      animation: bgMove 20s ease-in-out infinite;
+    }
+
+    @keyframes bgMove {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      50% { transform: translate(-2%, -2%) rotate(1deg); }
+    }
+
+    /* 粒子效果 */
+    .particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .particle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: var(--gold);
+      border-radius: 50%;
+      opacity: 0.6;
+      animation: float 8s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { 
+        transform: translateY(100vh) scale(0);
+        opacity: 0;
+      }
+      10% { 
+        opacity: 0.8;
+        transform: translateY(90vh) scale(1);
+      }
+      90% { 
+        opacity: 0.6;
+        transform: translateY(10vh) scale(0.8);
+      }
+      100% { 
+        transform: translateY(-10vh) scale(0);
+        opacity: 0;
+      }
+    }
+
+    /* 灯笼 */
     .lanterns {
       position: fixed;
       top: 0;
@@ -31,73 +108,14 @@
 
     .lantern {
       position: absolute;
-      font-size: 50px;
-      animation: swing 3s ease-in-out infinite;
-      text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+      font-size: 32px;
+      animation: swing 4s ease-in-out infinite;
+      filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.6));
     }
 
     @keyframes swing {
-      0%, 100% { transform: rotate(-8deg); }
-      50% { transform: rotate(8deg); }
-    }
-
-    /* 烟花 */
-    .fireworks {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .firework {
-      position: absolute;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      animation: firework 2.5s ease-out infinite;
-    }
-
-    @keyframes firework {
-      0% {
-        transform: translateY(100vh) scale(0);
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(-100px) scale(1.5);
-        opacity: 0;
-      }
-    }
-
-    /* 金币雨 */
-    .coins {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 1;
-      overflow: hidden;
-    }
-
-    .coin {
-      position: absolute;
-      font-size: 24px;
-      animation: fall 4s linear infinite;
-    }
-
-    @keyframes fall {
-      0% {
-        transform: translateY(-50px) rotate(0deg);
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(100vh) rotate(360deg);
-        opacity: 0.5;
-      }
+      0%, 100% { transform: rotate(-5deg); }
+      50% { transform: rotate(5deg); }
     }
 
     /* 主容器 */
@@ -116,112 +134,109 @@
     .input-page {
       text-align: center;
       width: 100%;
-      max-width: 420px;
+      max-width: 380px;
     }
 
     .year-badge {
-      display: inline-block;
-      background: linear-gradient(135deg, #FFD700, #FFA500);
-      color: #8B0000;
-      padding: 8px 30px;
-      border-radius: 30px;
-      font-size: 20px;
-      font-weight: bold;
-      margin-bottom: 15px;
-      box-shadow: 0 5px 20px rgba(255, 215, 0, 0.5);
-      animation: shine 2s ease-in-out infinite;
-    }
-
-    @keyframes shine {
-      0%, 100% { box-shadow: 0 5px 20px rgba(255, 215, 0, 0.5); }
-      50% { box-shadow: 0 5px 40px rgba(255, 215, 0, 0.8); }
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, var(--accent), #ff6b6b);
+      color: white;
+      padding: 10px 24px;
+      border-radius: 50px;
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 32px rgba(233, 69, 96, 0.4);
     }
 
     .title {
-      font-size: 42px;
-      color: #FFD700;
-      text-shadow: 3px 3px 0 #8B0000, 0 0 30px rgba(255, 215, 0, 0.8);
-      margin-bottom: 10px;
-      animation: pulse 1.5s ease-in-out infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { transform: scale(1) rotate(-2deg); }
-      50% { transform: scale(1.05) rotate(2deg); }
+      font-size: 38px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff 0%, var(--gold) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+      letter-spacing: 2px;
     }
 
     .year {
-      font-size: 80px;
-      color: #FFD700;
+      font-size: 72px;
       font-weight: 900;
-      text-shadow: 4px 4px 0 #8B0000, 0 0 50px rgba(255, 215, 0, 0.6);
-      margin: 20px 0;
-      animation: bounce 1s ease-in-out infinite;
-    }
-
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-15px); }
+      background: linear-gradient(135deg, var(--gold), #ff8c00);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin: 15px 0;
+      letter-spacing: 8px;
     }
 
     .subtitle {
-      font-size: 18px;
-      color: #FFF;
-      margin-bottom: 30px;
-      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+      font-size: 15px;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 35px;
     }
 
     .input-box {
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(10px);
-      border-radius: 25px;
-      padding: 35px 30px;
-      border: 4px solid #FFD700;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      padding: 30px;
     }
 
     .input-label {
-      color: #8B0000;
-      font-size: 20px;
-      margin-bottom: 15px;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 15px;
+      margin-bottom: 12px;
       display: block;
-      font-weight: bold;
+      font-weight: 500;
     }
 
     .name-input {
       width: 100%;
-      padding: 18px 25px;
-      font-size: 20px;
-      border: 3px solid #DC143C;
-      border-radius: 50px;
-      background: #FFF5F5;
+      padding: 16px 20px;
+      font-size: 17px;
+      border: 2px solid var(--glass-border);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
       outline: none;
       text-align: center;
       transition: all 0.3s;
     }
 
+    .name-input::placeholder {
+      color: rgba(255, 255, 255, 0.4);
+    }
+
     .name-input:focus {
-      border-color: #FFD700;
-      box-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
+      border-color: var(--accent);
+      background: rgba(255, 255, 255, 0.12);
+      box-shadow: 0 0 0 4px rgba(233, 69, 96, 0.2);
     }
 
     .generate-btn {
-      margin-top: 25px;
-      padding: 18px 50px;
-      font-size: 22px;
-      background: linear-gradient(135deg, #FFD700, #FFA500);
-      color: #8B0000;
+      margin-top: 20px;
+      width: 100%;
+      padding: 16px 32px;
+      font-size: 17px;
+      background: linear-gradient(135deg, var(--accent), #ff6b6b);
+      color: white;
       border: none;
-      border-radius: 50px;
+      border-radius: 16px;
       cursor: pointer;
-      font-weight: bold;
+      font-weight: 600;
       transition: all 0.3s;
-      box-shadow: 0 8px 30px rgba(255, 215, 0, 0.5);
+      box-shadow: 0 8px 24px rgba(233, 69, 96, 0.4);
     }
 
     .generate-btn:hover {
-      transform: translateY(-5px) scale(1.05);
-      box-shadow: 0 15px 40px rgba(255, 215, 0, 0.7);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(233, 69, 96, 0.5);
     }
 
     .generate-btn:active {
@@ -233,125 +248,131 @@
       display: none;
       text-align: center;
       width: 100%;
-      max-width: 480px;
+      max-width: 400px;
     }
 
     .blessing-card {
-      background: linear-gradient(180deg, #FFD700 0%, #FFA500 50%, #FF6B00 100%);
-      border-radius: 35px;
-      padding: 45px 30px;
-      box-shadow: 0 25px 80px rgba(139, 0, 0, 0.5);
-      border: 5px solid #FFF;
+      background: linear-gradient(180deg, #fff 0%, #f8f9fa 100%);
+      border-radius: 28px;
+      padding: 40px 28px;
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
     }
 
     .horse-badge {
-      font-size: 70px;
-      margin-bottom: 10px;
-      animation: bounce 1s ease-in-out infinite;
+      font-size: 56px;
+      margin-bottom: 8px;
     }
 
     .blessing-title {
-      font-size: 32px;
-      color: #8B0000;
-      margin-bottom: 20px;
-      font-weight: bold;
-      text-shadow: 1px 1px 0 #FFF;
+      font-size: 22px;
+      color: var(--primary);
+      margin-bottom: 25px;
+      font-weight: 700;
     }
 
     .recipient-name {
-      font-size: 46px;
-      color: #8B0000;
-      text-shadow: 2px 2px 0 #FFD700;
-      margin-bottom: 25px;
+      font-size: 36px;
+      color: var(--accent);
+      font-weight: 800;
+      margin-bottom: 20px;
       word-break: break-all;
-      font-weight: 900;
+      line-height: 1.3;
     }
 
-    .horse-wishes {
-      display: flex;
-      justify-content: center;
+    .wishes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
       gap: 10px;
       margin-bottom: 25px;
-      flex-wrap: wrap;
     }
 
-    .horse-wish {
-      background: rgba(139, 0, 0, 0.15);
-      padding: 10px 18px;
-      border-radius: 25px;
-      font-size: 15px;
-      color: #8B0000;
-      font-weight: bold;
-      border: 2px solid #8B0000;
+    .wish-item {
+      background: linear-gradient(135deg, var(--primary), #2d2d44);
+      padding: 14px 8px;
+      border-radius: 16px;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
     }
 
-    .blessing-text {
-      font-size: 21px;
-      color: #8B0000;
-      line-height: 1.9;
-      margin-bottom: 25px;
-      background: rgba(255, 255, 255, 0.3);
-      padding: 20px;
-      border-radius: 15px;
-    }
-
-    .blessing-text .highlight {
-      color: #8B0000;
-      font-weight: 900;
+    .wish-icon {
       font-size: 24px;
     }
 
+    .blessing-text {
+      font-size: 16px;
+      color: #666;
+      line-height: 1.8;
+      margin-bottom: 25px;
+      text-align: left;
+      background: #f5f5f5;
+      padding: 20px;
+      border-radius: 16px;
+    }
+
+    .blessing-text .highlight {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
     .from-text {
-      font-size: 17px;
-      color: #8B0000;
+      font-size: 14px;
+      color: #999;
       margin-bottom: 20px;
-      font-weight: bold;
+    }
+
+    .from-text span {
+      color: var(--accent);
+      font-weight: 600;
     }
 
     .share-btn {
-      padding: 15px 40px;
-      font-size: 18px;
-      background: #8B0000;
-      color: #FFD700;
-      border: 3px solid #FFF;
-      border-radius: 50px;
+      width: 100%;
+      padding: 15px 32px;
+      font-size: 16px;
+      background: linear-gradient(135deg, var(--primary), #2d2d44);
+      color: #fff;
+      border: none;
+      border-radius: 14px;
       cursor: pointer;
-      font-weight: bold;
+      font-weight: 600;
       transition: all 0.3s;
     }
 
     .share-btn:hover {
-      transform: scale(1.08);
-      background: #A00000;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(26, 26, 46, 0.4);
     }
 
     .create-own {
-      margin-top: 30px;
-      color: #FFF;
-      font-size: 15px;
-      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+      margin-top: 25px;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 14px;
     }
 
     .create-own a {
-      color: #FFD700;
+      color: var(--gold);
       text-decoration: none;
-      font-weight: bold;
     }
 
-    /* 复制链接提示 */
+    /* 复制提示 */
     .copy-tip {
       position: fixed;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background: rgba(139, 0, 0, 0.95);
-      color: #FFD700;
-      padding: 25px 50px;
-      border-radius: 15px;
-      font-size: 18px;
+      background: var(--primary);
+      color: #fff;
+      padding: 20px 36px;
+      border-radius: 16px;
+      font-size: 15px;
       z-index: 1000;
       display: none;
-      border: 3px solid #FFD700;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
     }
 
     .copy-tip.show {
@@ -360,142 +381,138 @@
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+      from { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
       to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
     }
 
     /* 响应式 */
-    @media (max-width: 480px) {
-      .title { font-size: 32px; }
-      .year { font-size: 60px; }
-      .subtitle { font-size: 16px; }
-      .recipient-name { font-size: 34px; }
-      .blessing-text { font-size: 18px; }
+    @media (max-width: 420px) {
+      .title { font-size: 28px; }
+      .year { font-size: 52px; }
+      .wishes-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+      .wish-item { padding: 12px 6px; font-size: 11px; }
+      .wish-icon { font-size: 20px; }
     }
   </style>
 </head>
 <body>
-  <!-- 红灯笼 -->
+  <!-- 背景 -->
+  <div class="bg">
+    <div class="particles" id="particles"></div>
+  </div>
+  
+  <!-- 灯笼 -->
   <div class="lanterns" id="lanterns"></div>
-  
-  <!-- 烟花 -->
-  <div class="fireworks" id="fireworks"></div>
-  
-  <!-- 金币雨 -->
-  <div class="coins" id="coins"></div>
 
   <div class="container">
     <!-- 输入页面 -->
     <div class="input-page" id="inputPage">
-      <div class="year-badge">🐴 马年大吉 🐴</div>
+      <div class="year-badge">
+        <span>🐴</span>
+        <span>马年大吉</span>
+      </div>
       <div class="year">2026</div>
-      <h1 class="title">🎊 新春送福 🎊</h1>
-      <p class="subtitle">输入您的名字，生成专属拜年祝福</p>
+      <h1 class="title">新春送福</h1>
+      <p class="subtitle">输入名字，生成专属拜年祝福</p>
       
       <div class="input-box">
-        <label class="input-label">请输入您的名字</label>
-        <input type="text" class="name-input" id="nameInput" placeholder="比如：张三" maxlength="20">
-        <button class="generate-btn" onclick="generateBlessing()">🧧 生成祝福</button>
+        <label class="input-label">你的名字</label>
+        <input type="text" class="name-input" id="nameInput" placeholder="请输入名字" maxlength="20">
+        <button class="generate-btn" onclick="generateBlessing()">
+          🧧 生成祝福
+        </button>
       </div>
     </div>
 
     <!-- 祝福页面 -->
     <div class="blessing-page" id="blessingPage">
       <div class="blessing-card">
-        <div class="horse-badge">🐴💰🎉</div>
-        <div class="blessing-title">🎊 新春祝福 馬到成功 🎊</div>
+        <div class="horse-badge">🐴✨</div>
+        <div class="blessing-title">祝你新年快乐</div>
         <div class="recipient-name" id="recipientName"></div>
         
-        <div class="horse-wishes">
-          <span class="horse-wish">🐎 马到成功</span>
-          <span class="horse-wish">🎖️ 马上封侯</span>
-          <span class="horse-wish">💰 马上有钱</span>
+        <div class="wishes-grid">
+          <div class="wish-item">
+            <span class="wish-icon">🐎</span>
+            <span>马到成功</span>
+          </div>
+          <div class="wish-item">
+            <span class="wish-icon">💰</span>
+            <span>马上有钱</span>
+          </div>
+          <div class="wish-item">
+            <span class="wish-icon">🎖️</span>
+            <span>马上封侯</span>
+          </div>
         </div>
         
         <div class="blessing-text">
-          亲爱的 <span class="highlight" id="nameHighlight"></span>：<br><br>
-          🐴 愿您新的一年 🐴<br>
-          <span class="highlight">龙马精神</span> 💪<br>
-          <span class="highlight">身体健康</span> 🏃‍♂️<br>
-          <span class="highlight">财源广进</span> 💰<br>
-          <span class="highlight">万事如意</span> 🎉<br><br>
-          🐴🎊 馬年大吉，马到成功！🎊🐴
+          <span id="nameHighlight"></span>，祝你新的一年：<br>
+          <span class="highlight">龙马精神</span> 身体棒，<br>
+          <span class="highlight">财源广进</span> 事业旺，<br>
+          <span class="highlight">万事如意</span> 天天笑！<br><br>
+          🐴 马年大吉，马到成功！
         </div>
-        <div class="from-text">— 来自 <span id="senderName"></span> 的祝福</div>
-        <button class="share-btn" onclick="shareBlessing()">📤 发送给朋友</button>
+        
+        <div class="from-text">— 来自 <span id="senderName">丁林</span> 的祝福</div>
+        <button class="share-btn" onclick="shareBlessing()">
+          📤 发送给朋友
+        </button>
       </div>
+      
       <div class="create-own">
         <a href="#" onclick="createOwn()">← 创建自己的祝福</a>
       </div>
     </div>
   </div>
 
-  <div class="copy-tip" id="copyTip">🎉 链接已复制！快分享给朋友吧~</div>
+  <div class="copy-tip" id="copyTip">✨ 链接已复制，快分享给朋友吧！</div>
 
   <script>
     // 获取URL参数
     const urlParams = new URLSearchParams(window.location.search);
     const recipientName = urlParams.get('name');
-    const senderName = urlParams.get('from') || '神秘好友';
+    const senderName = decodeURIComponent(urlParams.get('from')) || '丁林';
 
     // 如果有名字参数，显示祝福页面
     if (recipientName) {
       showBlessing(recipientName, senderName);
     }
 
-    // 创建红灯笼
+    // 创建粒子
+    function createParticles() {
+      const container = document.getElementById('particles');
+      const icons = ['✨', '🧧', '💫', '⭐', '🌟'];
+      
+      for (let i = 0; i < 20; i++) {
+        setTimeout(() => {
+          const particle = document.createElement('div');
+          particle.className = 'particle';
+          particle.textContent = icons[i % icons.length];
+          particle.style.left = Math.random() * 100 + '%';
+          particle.style.animationDuration = (Math.random() * 4 + 6) + 's';
+          particle.style.animationDelay = Math.random() * 5 + 's';
+          particle.style.fontSize = (Math.random() * 10 + 12) + 'px';
+          container.appendChild(particle);
+          
+          setTimeout(() => particle.remove(), 10000);
+        }, i * 300);
+      }
+    }
+
+    // 创建灯笼
     function createLanterns() {
       const container = document.getElementById('lanterns');
-      const lanterns = ['🏮', '🎏', '🧧', '🏮'];
+      const lanterns = ['🏮', '🧧', '🎏'];
       
-      for (let i = 0; i < 15; i++) {
+      for (let i = 0; i < 12; i++) {
         const lantern = document.createElement('div');
         lantern.className = 'lantern';
         lantern.textContent = lanterns[i % lanterns.length];
-        lantern.style.left = (Math.random() * 95 + 2.5) + '%';
-        lantern.style.top = (Math.random() * 50 + 5) + '%';
+        lantern.style.left = (Math.random() * 92 + 4) + '%';
+        lantern.style.top = (Math.random() * 45 + 5) + '%';
         lantern.style.animationDelay = Math.random() * 2 + 's';
         container.appendChild(lantern);
-      }
-    }
-
-    // 创建烟花
-    function createFireworks() {
-      const container = document.getElementById('fireworks');
-      const colors = ['#FFD700', '#FF4500', '#FF6347', '#FFA500', '#FFF', '#FF1493'];
-      
-      for (let i = 0; i < 40; i++) {
-        setTimeout(() => {
-          const firework = document.createElement('div');
-          firework.className = 'firework';
-          firework.style.left = Math.random() * 100 + '%';
-          firework.style.background = colors[Math.floor(Math.random() * colors.length)];
-          firework.style.animationDuration = (Math.random() * 2 + 1.5) + 's';
-          firework.style.animationDelay = Math.random() * 2 + 's';
-          container.appendChild(firework);
-          
-          setTimeout(() => firework.remove(), 4000);
-        }, i * 150);
-      }
-    }
-
-    // 创建金币雨
-    function createCoins() {
-      const container = document.getElementById('coins');
-      const coins = ['🧧', '💰', '🪙', '🎁', '💎'];
-      
-      for (let i = 0; i < 25; i++) {
-        setTimeout(() => {
-          const coin = document.createElement('div');
-          coin.className = 'coin';
-          coin.textContent = coins[i % coins.length];
-          coin.style.left = Math.random() * 100 + '%';
-          coin.style.animationDuration = (Math.random() * 3 + 3) + 's';
-          coin.style.animationDelay = Math.random() * 3 + 's';
-          container.appendChild(coin);
-          
-          setTimeout(() => coin.remove(), 6000);
-        }, i * 300);
       }
     }
 
@@ -503,20 +520,18 @@
     function generateBlessing() {
       const name = document.getElementById('nameInput').value.trim();
       if (!name) {
-        alert('请输入您的名字~');
+        alert('请输入你的名字~');
         return;
       }
       
-      // 生成专属链接
       const baseUrl = window.location.origin + window.location.pathname;
-      const shareUrl = `${baseUrl}?name=${encodeURIComponent(name)}`;
+      const shareUrl = `${baseUrl}?name=${encodeURIComponent(name)}&from=${encodeURIComponent('丁林')}`;
       
-      // 复制链接
       navigator.clipboard.writeText(shareUrl).then(() => {
         showCopyTip();
-        showBlessing(name, name);
+        showBlessing(name, '丁林');
       }).catch(() => {
-        showBlessing(name, name);
+        showBlessing(name, '丁林');
       });
     }
 
@@ -527,19 +542,19 @@
       document.getElementById('recipientName').textContent = name;
       document.getElementById('nameHighlight').textContent = name;
       document.getElementById('senderName').textContent = sender;
-      document.title = `${name}给您拜年啦！`;
+      document.title = `${name}，祝你新年快乐！`;
     }
 
     // 分享祝福
     function shareBlessing() {
       const name = document.getElementById('recipientName').textContent;
       const baseUrl = window.location.origin + window.location.pathname;
-      const shareUrl = `${baseUrl}?name=${encodeURIComponent(name)}`;
+      const shareUrl = `${baseUrl}?name=${encodeURIComponent(name)}&from=${encodeURIComponent('丁林')}`;
       
       navigator.clipboard.writeText(shareUrl).then(() => {
         showCopyTip();
       }).catch(() => {
-        prompt('复制以下链接分享给朋友：', shareUrl);
+        prompt('复制以下链接：', shareUrl);
       });
     }
 
@@ -555,19 +570,13 @@
     function showCopyTip() {
       const tip = document.getElementById('copyTip');
       tip.classList.add('show');
-      setTimeout(() => {
-        tip.classList.remove('show');
-      }, 2500);
+      setTimeout(() => tip.classList.remove('show'), 2500);
     }
 
     // 初始化
+    createParticles();
     createLanterns();
-    createFireworks();
-    createCoins();
-
-    // 定期创建
-    setInterval(createFireworks, 4000);
-    setInterval(createCoins, 3000);
+    setInterval(createParticles, 6000);
   </script>
 </body>
 </html>
