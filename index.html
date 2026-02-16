@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>🐲 新春送福 | 给您拜年啦</title>
+  <title>🐴 新春送福 | 给您拜年啦</title>
   <style>
     * {
       margin: 0;
@@ -48,8 +48,8 @@
       }
     }
 
-    /* 灯笼 */
-    .lanterns {
+    /* 骏马奔腾效果 */
+    .horses {
       position: fixed;
       top: 0;
       left: 0;
@@ -57,17 +57,23 @@
       height: 100%;
       pointer-events: none;
       z-index: 1;
+      overflow: hidden;
     }
 
-    .lantern {
+    .horse {
       position: absolute;
       font-size: 40px;
-      animation: swing 3s ease-in-out infinite;
+      animation: gallop 8s linear infinite;
+      opacity: 0.8;
     }
 
-    @keyframes swing {
-      0%, 100% { transform: rotate(-5deg); }
-      50% { transform: rotate(5deg); }
+    @keyframes gallop {
+      0% {
+        transform: translateX(-100px);
+      }
+      100% {
+        transform: translateX(calc(100vw + 100px));
+      }
     }
 
     /* 主容器 */
@@ -198,6 +204,11 @@
       margin-bottom: 20px;
     }
 
+    .horse-badge {
+      font-size: 60px;
+      margin-bottom: 10px;
+    }
+
     .recipient-name {
       font-size: 42px;
       color: #fff;
@@ -216,6 +227,21 @@
     .blessing-text .highlight {
       color: #ffd700;
       font-weight: bold;
+    }
+
+    .horse-wishes {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+    }
+
+    .horse-wish {
+      background: rgba(255, 215, 0, 0.2);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 16px;
     }
 
     .from-text {
@@ -251,31 +277,6 @@
       text-decoration: none;
     }
 
-    /* 装饰元素 */
-    .decorations {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-      pointer-events: none;
-      z-index: 5;
-    }
-
-    .deco {
-      position: absolute;
-      font-size: 30px;
-    }
-
-    /* 响应式 */
-    @media (max-width: 480px) {
-      .title { font-size: 28px; }
-      .year { font-size: 56px; }
-      .subtitle { font-size: 16px; }
-      .recipient-name { font-size: 32px; }
-      .blessing-text { font-size: 18px; }
-    }
-
     /* 复制链接提示 */
     .copy-tip {
       position: fixed;
@@ -300,20 +301,29 @@
       from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
       to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
     }
+
+    /* 响应式 */
+    @media (max-width: 480px) {
+      .title { font-size: 28px; }
+      .year { font-size: 56px; }
+      .subtitle { font-size: 16px; }
+      .recipient-name { font-size: 32px; }
+      .blessing-text { font-size: 18px; }
+    }
   </style>
 </head>
 <body>
   <!-- 烟花 -->
   <div class="fireworks" id="fireworks"></div>
   
-  <!-- 灯笼 -->
-  <div class="lanterns" id="lanterns"></div>
+  <!-- 奔腾的骏马 -->
+  <div class="horses" id="horses"></div>
 
   <div class="container">
     <!-- 输入页面 -->
     <div class="input-page" id="inputPage">
       <div class="year">2026</div>
-      <h1 class="title">🐲 新春送福</h1>
+      <h1 class="title">🐴 新春送福</h1>
       <p class="subtitle">输入您的名字，生成专属拜年祝福</p>
       
       <div class="input-box">
@@ -326,16 +336,24 @@
     <!-- 祝福页面 -->
     <div class="blessing-page" id="blessingPage">
       <div class="blessing-card">
+        <div class="horse-badge">🐴</div>
         <div class="blessing-title">🎊 新春祝福 🎊</div>
         <div class="recipient-name" id="recipientName"></div>
+        
+        <div class="horse-wishes">
+          <span class="horse-wish">🐎 马到成功</span>
+          <span class="horse-wish">🎖️ 马上封侯</span>
+          <span class="horse-wish">💰 马上有钱</span>
+        </div>
+        
         <div class="blessing-text">
-          新春到，<span class="highlight">福气到</span>！<br><br>
+          亲爱的 <span class="highlight" id="nameHighlight"></span>：<br><br>
           愿您新的一年<br>
+          <span class="highlight">龙马精神</span> 🐴<br>
           <span class="highlight">身体健康</span> 🏃‍♂️<br>
           <span class="highlight">财源广进</span> 💰<br>
-          <span class="highlight">心想事成</span> ✨<br>
           <span class="highlight">万事如意</span> 🎉<br><br>
-          🐲 龙年大吉大利！
+          🐴🐴 马年大吉，马到成功！🐴🐴
         </div>
         <div class="from-text">— 来自 <span id="senderName"></span> 的祝福</div>
         <button class="share-btn" onclick="shareBlessing()">发送给朋友</button>
@@ -379,19 +397,28 @@
       }
     }
 
-    // 创建灯笼
-    function createLanterns() {
-      const container = document.getElementById('lanterns');
-      const lanterns = ['🏮', '🎏', '🧧'];
+    // 创建奔腾的骏马
+    function createHorses() {
+      const container = document.getElementById('horses');
+      const horses = ['🐴', '🐎', '🏇'];
       
-      for (let i = 0; i < 12; i++) {
-        const lantern = document.createElement('div');
-        lantern.className = 'lantern';
-        lantern.textContent = lanterns[i % lanterns.length];
-        lantern.style.left = (Math.random() * 90 + 5) + '%';
-        lantern.style.top = (Math.random() * 60 + 10) + '%';
-        lantern.style.animationDelay = Math.random() * 2 + 's';
-        container.appendChild(lantern);
+      for (let i = 0; i < 8; i++) {
+        setTimeout(() => {
+          const horse = document.createElement('div');
+          horse.className = 'horse';
+          horse.textContent = horses[i % horses.length];
+          horse.style.top = (10 + Math.random() * 70) + '%';
+          horse.style.animationDuration = (8 + Math.random() * 4) + 's';
+          horse.style.animationDelay = Math.random() * 5 + 's';
+          container.appendChild(horse);
+          
+          // 马跑完后重置
+          setTimeout(() => {
+            horse.style.animation = 'none';
+            horse.offsetHeight; // 触发重绘
+            horse.style.animation = `gallop ${8 + Math.random() * 4}s linear infinite`;
+          }, (8 + Math.random() * 4) * 1000);
+        }, i * 1000);
       }
     }
 
@@ -423,6 +450,7 @@
       document.getElementById('inputPage').style.display = 'none';
       document.getElementById('blessingPage').style.display = 'block';
       document.getElementById('recipientName').textContent = name;
+      document.getElementById('nameHighlight').textContent = name;
       document.getElementById('senderName').textContent = sender;
       document.title = `${name}给您拜年啦！`;
     }
@@ -445,7 +473,7 @@
       document.getElementById('inputPage').style.display = 'block';
       document.getElementById('blessingPage').style.display = 'none';
       document.getElementById('nameInput').value = '';
-      document.title = '🐲 新春送福 | 给您拜年啦';
+      document.title = '🐴 新春送福 | 给您拜年啦';
     }
 
     // 显示复制提示
@@ -459,7 +487,7 @@
 
     // 初始化
     createFireworks();
-    createLanterns();
+    createHorses();
 
     // 定期创建烟花
     setInterval(createFireworks, 5000);
