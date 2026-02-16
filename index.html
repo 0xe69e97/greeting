@@ -3,14 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>🐴 新春送福 | 马年大吉</title>
+  <title>新春快乐 2026</title>
   <style>
     :root {
-      --primary: #1a1a2e;
-      --accent: #e94560;
-      --gold: #ffd700;
-      --glass: rgba(255, 255, 255, 0.1);
-      --glass-border: rgba(255, 255, 255, 0.2);
+      --bg-dark: #0a0a0f;
+      --bg-card: #16161d;
+      --accent: #ff4757;
+      --accent-glow: rgba(255, 71, 87, 0.4);
+      --gold: #ffa502;
+      --gold-glow: rgba(255, 165, 2, 0.3);
+      --text: #ffffff;
+      --text-muted: rgba(255, 255, 255, 0.6);
+      --border: rgba(255, 255, 255, 0.08);
     }
 
     * {
@@ -20,19 +24,17 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'PingFang SC', sans-serif;
       min-height: 100vh;
-      background: var(--primary);
+      background: var(--bg-dark);
+      color: var(--text);
       overflow-x: hidden;
     }
 
     /* 动态背景 */
     .bg {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      inset: 0;
       z-index: 0;
       overflow: hidden;
     }
@@ -40,82 +42,59 @@
     .bg::before {
       content: '';
       position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
+      inset: -50%;
       background: 
-        radial-gradient(ellipse at 20% 80%, rgba(233, 69, 96, 0.15) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 20%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
-        radial-gradient(ellipse at 50% 50%, rgba(233, 69, 96, 0.05) 0%, transparent 70%);
-      animation: bgMove 20s ease-in-out infinite;
+        radial-gradient(circle at 30% 20%, var(--accent-glow) 0%, transparent 40%),
+        radial-gradient(circle at 70% 80%, var(--gold-glow) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.02) 0%, transparent 60%);
+      animation: bgPulse 15s ease-in-out infinite;
     }
 
-    @keyframes bgMove {
-      0%, 100% { transform: translate(0, 0) rotate(0deg); }
-      50% { transform: translate(-2%, -2%) rotate(1deg); }
+    @keyframes bgPulse {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      50% { transform: scale(1.1) rotate(3deg); }
     }
 
-    /* 粒子效果 */
-    .particles {
+    /* 星星粒子 */
+    .stars {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      inset: 0;
       pointer-events: none;
     }
 
-    .particle {
+    .star {
       position: absolute;
-      width: 6px;
-      height: 6px;
-      background: var(--gold);
+      width: 4px;
+      height: 4px;
+      background: #fff;
       border-radius: 50%;
-      opacity: 0.6;
-      animation: float 8s ease-in-out infinite;
+      opacity: 0;
+      animation: twinkle 3s ease-in-out infinite;
     }
 
-    @keyframes float {
-      0%, 100% { 
-        transform: translateY(100vh) scale(0);
-        opacity: 0;
-      }
-      10% { 
-        opacity: 0.8;
-        transform: translateY(90vh) scale(1);
-      }
-      90% { 
-        opacity: 0.6;
-        transform: translateY(10vh) scale(0.8);
-      }
-      100% { 
-        transform: translateY(-10vh) scale(0);
-        opacity: 0;
-      }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0; transform: scale(0.5); }
+      50% { opacity: 0.8; transform: scale(1); }
     }
 
     /* 灯笼 */
     .lanterns {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      inset: 0;
       pointer-events: none;
       z-index: 1;
     }
 
     .lantern {
       position: absolute;
-      font-size: 32px;
-      animation: swing 4s ease-in-out infinite;
-      filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.6));
+      font-size: 28px;
+      animation: float 6s ease-in-out infinite;
+      filter: drop-shadow(0 0 20px var(--gold-glow));
     }
 
-    @keyframes swing {
-      0%, 100% { transform: rotate(-5deg); }
-      50% { transform: rotate(5deg); }
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(-3deg); }
+      50% { transform: translateY(-10px) rotate(3deg); }
     }
 
     /* 主容器 */
@@ -127,82 +106,92 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 20px;
+      padding: 24px;
     }
 
-    /* 输入页面 */
-    .input-page {
-      text-align: center;
+    /* 输入页 */
+    .page {
       width: 100%;
-      max-width: 380px;
+      max-width: 360px;
+      text-align: center;
+      animation: fadeIn 0.6s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .page.hidden {
+      display: none;
     }
 
     .year-badge {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      background: linear-gradient(135deg, var(--accent), #ff6b6b);
+      gap: 6px;
+      background: linear-gradient(135deg, var(--accent), #ff6b81);
       color: white;
-      padding: 10px 24px;
+      padding: 8px 20px;
       border-radius: 50px;
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 600;
-      margin-bottom: 20px;
-      box-shadow: 0 8px 32px rgba(233, 69, 96, 0.4);
+      margin-bottom: 24px;
+      box-shadow: 0 8px 32px var(--accent-glow);
     }
 
     .title {
-      font-size: 38px;
+      font-size: 42px;
       font-weight: 800;
       background: linear-gradient(135deg, #fff 0%, var(--gold) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+      letter-spacing: 4px;
       margin-bottom: 8px;
-      letter-spacing: 2px;
     }
 
     .year {
-      font-size: 72px;
+      font-size: 80px;
       font-weight: 900;
-      background: linear-gradient(135deg, var(--gold), #ff8c00);
+      background: linear-gradient(135deg, var(--gold), #ffbe76);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      margin: 15px 0;
-      letter-spacing: 8px;
+      letter-spacing: 12px;
+      margin-bottom: 32px;
     }
 
     .subtitle {
-      font-size: 15px;
-      color: rgba(255, 255, 255, 0.6);
-      margin-bottom: 35px;
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 32px;
     }
 
     .input-box {
-      background: var(--glass);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid var(--glass-border);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
       border-radius: 24px;
-      padding: 30px;
+      padding: 28px;
     }
 
     .input-label {
-      color: rgba(255, 255, 255, 0.9);
-      font-size: 15px;
+      color: var(--text-muted);
+      font-size: 13px;
       margin-bottom: 12px;
       display: block;
-      font-weight: 500;
+      text-align: left;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
     .name-input {
       width: 100%;
-      padding: 16px 20px;
-      font-size: 17px;
-      border: 2px solid var(--glass-border);
-      border-radius: 16px;
-      background: rgba(255, 255, 255, 0.08);
+      padding: 16px 18px;
+      font-size: 18px;
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.03);
       color: #fff;
       outline: none;
       text-align: center;
@@ -210,71 +199,64 @@
     }
 
     .name-input::placeholder {
-      color: rgba(255, 255, 255, 0.4);
+      color: rgba(255, 255, 255, 0.25);
     }
 
     .name-input:focus {
       border-color: var(--accent);
-      background: rgba(255, 255, 255, 0.12);
-      box-shadow: 0 0 0 4px rgba(233, 69, 96, 0.2);
+      background: rgba(255, 71, 87, 0.05);
+      box-shadow: 0 0 0 4px var(--accent-glow);
     }
 
     .generate-btn {
-      margin-top: 20px;
+      margin-top: 16px;
       width: 100%;
-      padding: 16px 32px;
+      padding: 18px 32px;
       font-size: 17px;
-      background: linear-gradient(135deg, var(--accent), #ff6b6b);
+      background: linear-gradient(135deg, var(--accent), #ff6b81);
       color: white;
       border: none;
-      border-radius: 16px;
+      border-radius: 14px;
       cursor: pointer;
       font-weight: 600;
       transition: all 0.3s;
-      box-shadow: 0 8px 24px rgba(233, 69, 96, 0.4);
+      box-shadow: 0 8px 24px var(--accent-glow);
     }
 
     .generate-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 32px rgba(233, 69, 96, 0.5);
+      transform: translateY(-3px);
+      box-shadow: 0 16px 40px var(--accent-glow);
     }
 
     .generate-btn:active {
-      transform: translateY(0);
+      transform: scale(0.98);
     }
 
-    /* 祝福页面 */
-    .blessing-page {
-      display: none;
-      text-align: center;
-      width: 100%;
-      max-width: 400px;
-    }
-
+    /* 祝福页 */
     .blessing-card {
-      background: linear-gradient(180deg, #fff 0%, #f8f9fa 100%);
+      background: linear-gradient(180deg, #1e1e28 0%, var(--bg-card) 100%);
       border-radius: 28px;
       padding: 40px 28px;
-      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border);
     }
 
     .horse-badge {
-      font-size: 56px;
-      margin-bottom: 8px;
+      font-size: 52px;
+      margin-bottom: 12px;
     }
 
     .blessing-title {
-      font-size: 22px;
-      color: var(--primary);
-      margin-bottom: 25px;
-      font-weight: 700;
+      font-size: 20px;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      font-weight: 500;
     }
 
     .recipient-name {
-      font-size: 36px;
-      color: var(--accent);
+      font-size: 38px;
       font-weight: 800;
-      margin-bottom: 20px;
+      color: #fff;
+      margin-bottom: 28px;
       word-break: break-all;
       line-height: 1.3;
     }
@@ -283,60 +265,68 @@
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 10px;
-      margin-bottom: 25px;
+      margin-bottom: 28px;
     }
 
     .wish-item {
-      background: linear-gradient(135deg, var(--primary), #2d2d44);
-      padding: 14px 8px;
+      background: linear-gradient(180deg, rgba(255, 71, 87, 0.15) 0%, rgba(255, 71, 87, 0.05) 100%);
+      border: 1px solid rgba(255, 71, 87, 0.2);
+      padding: 16px 8px;
       border-radius: 16px;
       color: #fff;
-      font-size: 13px;
-      font-weight: 600;
+      font-size: 12px;
+      font-weight: 500;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
+      transition: all 0.3s;
+    }
+
+    .wish-item:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
     }
 
     .wish-icon {
-      font-size: 24px;
+      font-size: 26px;
     }
 
     .blessing-text {
-      font-size: 16px;
-      color: #666;
-      line-height: 1.8;
-      margin-bottom: 25px;
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.9;
+      margin-bottom: 24px;
       text-align: left;
-      background: #f5f5f5;
+      background: rgba(255, 255, 255, 0.03);
       padding: 20px;
       border-radius: 16px;
+      border: 1px solid var(--border);
     }
 
     .blessing-text .highlight {
-      color: var(--accent);
+      color: var(--gold);
       font-weight: 700;
     }
 
     .from-text {
-      font-size: 14px;
-      color: #999;
+      font-size: 13px;
+      color: var(--text-muted);
       margin-bottom: 20px;
     }
 
     .from-text span {
-      color: var(--accent);
+      color: #fff;
       font-weight: 600;
     }
 
     .share-btn {
       width: 100%;
-      padding: 15px 32px;
-      font-size: 16px;
-      background: linear-gradient(135deg, var(--primary), #2d2d44);
-      color: #fff;
-      border: none;
+      padding: 16px 32px;
+      font-size: 15px;
+      background: transparent;
+      color: var(--text);
+      border: 2px solid var(--border);
       border-radius: 14px;
       cursor: pointer;
       font-weight: 600;
@@ -344,19 +334,8 @@
     }
 
     .share-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(26, 26, 46, 0.4);
-    }
-
-    .create-own {
-      margin-top: 25px;
-      color: rgba(255, 255, 255, 0.5);
-      font-size: 14px;
-    }
-
-    .create-own a {
-      color: var(--gold);
-      text-decoration: none;
+      border-color: var(--accent);
+      background: rgba(255, 71, 87, 0.1);
     }
 
     /* 复制提示 */
@@ -365,55 +344,57 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background: var(--primary);
+      background: var(--bg-card);
       color: #fff;
-      padding: 20px 36px;
+      padding: 18px 32px;
       border-radius: 16px;
-      font-size: 15px;
+      font-size: 14px;
       z-index: 1000;
       display: none;
-      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border);
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
     }
 
     .copy-tip.show {
       display: block;
-      animation: fadeIn 0.3s ease;
+      animation: pop 0.3s ease;
     }
 
-    @keyframes fadeIn {
+    @keyframes pop {
       from { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
       to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
     }
 
     /* 响应式 */
-    @media (max-width: 420px) {
-      .title { font-size: 28px; }
-      .year { font-size: 52px; }
-      .wishes-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
-      .wish-item { padding: 12px 6px; font-size: 11px; }
-      .wish-icon { font-size: 20px; }
+    @media (max-width: 400px) {
+      .title { font-size: 32px; }
+      .year { font-size: 56px; letter-spacing: 8px; }
+      .wishes-grid { gap: 8px; }
+      .wish-item { padding: 14px 6px; }
+      .wish-icon { font-size: 22px; }
+      .recipient-name { font-size: 30px; }
     }
   </style>
 </head>
 <body>
   <!-- 背景 -->
   <div class="bg">
-    <div class="particles" id="particles"></div>
+    <div class="stars" id="stars"></div>
   </div>
   
   <!-- 灯笼 -->
   <div class="lanterns" id="lanterns"></div>
 
   <div class="container">
-    <!-- 输入页面 -->
-    <div class="input-page" id="inputPage">
+    <!-- 输入页 -->
+    <div class="page" id="inputPage">
       <div class="year-badge">
         <span>🐴</span>
         <span>马年大吉</span>
       </div>
       <div class="year">2026</div>
       <h1 class="title">新春送福</h1>
-      <p class="subtitle">输入名字，生成专属拜年祝福</p>
+      <p class="subtitle">输入名字，生成专属祝福</p>
       
       <div class="input-box">
         <label class="input-label">你的名字</label>
@@ -424,8 +405,8 @@
       </div>
     </div>
 
-    <!-- 祝福页面 -->
-    <div class="blessing-page" id="blessingPage">
+    <!-- 祝福页 -->
+    <div class="page hidden" id="blessingPage">
       <div class="blessing-card">
         <div class="horse-badge">🐴✨</div>
         <div class="blessing-title">祝你新年快乐</div>
@@ -459,59 +440,47 @@
           📤 发送给朋友
         </button>
       </div>
-      
-      <div class="create-own">
-        <a href="#" onclick="createOwn()">← 创建自己的祝福</a>
-      </div>
     </div>
   </div>
 
   <div class="copy-tip" id="copyTip">✨ 链接已复制，快分享给朋友吧！</div>
 
   <script>
-    // 获取URL参数
+    // URL参数
     const urlParams = new URLSearchParams(window.location.search);
     const recipientName = urlParams.get('name');
     const senderName = decodeURIComponent(urlParams.get('from')) || '丁林';
 
-    // 如果有名字参数，显示祝福页面
     if (recipientName) {
       showBlessing(recipientName, senderName);
     }
 
-    // 创建粒子
-    function createParticles() {
-      const container = document.getElementById('particles');
-      const icons = ['✨', '🧧', '💫', '⭐', '🌟'];
-      
-      for (let i = 0; i < 20; i++) {
-        setTimeout(() => {
-          const particle = document.createElement('div');
-          particle.className = 'particle';
-          particle.textContent = icons[i % icons.length];
-          particle.style.left = Math.random() * 100 + '%';
-          particle.style.animationDuration = (Math.random() * 4 + 6) + 's';
-          particle.style.animationDelay = Math.random() * 5 + 's';
-          particle.style.fontSize = (Math.random() * 10 + 12) + 'px';
-          container.appendChild(particle);
-          
-          setTimeout(() => particle.remove(), 10000);
-        }, i * 300);
+    // 星星
+    function createStars() {
+      const container = document.getElementById('stars');
+      for (let i = 0; i < 30; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = Math.random() * 100 + '%';
+        star.style.animationDelay = Math.random() * 3 + 's';
+        star.style.width = star.style.height = (Math.random() * 3 + 2) + 'px';
+        container.appendChild(star);
       }
     }
 
-    // 创建灯笼
+    // 灯笼
     function createLanterns() {
       const container = document.getElementById('lanterns');
       const lanterns = ['🏮', '🧧', '🎏'];
       
-      for (let i = 0; i < 12; i++) {
+      for (let i = 0; i < 10; i++) {
         const lantern = document.createElement('div');
         lantern.className = 'lantern';
         lantern.textContent = lanterns[i % lanterns.length];
-        lantern.style.left = (Math.random() * 92 + 4) + '%';
-        lantern.style.top = (Math.random() * 45 + 5) + '%';
-        lantern.style.animationDelay = Math.random() * 2 + 's';
+        lantern.style.left = (Math.random() * 90 + 5) + '%';
+        lantern.style.top = (Math.random() * 40 + 8) + '%';
+        lantern.style.animationDelay = Math.random() * 3 + 's';
         container.appendChild(lantern);
       }
     }
@@ -535,17 +504,17 @@
       });
     }
 
-    // 显示祝福页面
+    // 显示祝福页
     function showBlessing(name, sender) {
-      document.getElementById('inputPage').style.display = 'none';
-      document.getElementById('blessingPage').style.display = 'block';
+      document.getElementById('inputPage').classList.add('hidden');
+      document.getElementById('blessingPage').classList.remove('hidden');
       document.getElementById('recipientName').textContent = name;
       document.getElementById('nameHighlight').textContent = name;
       document.getElementById('senderName').textContent = sender;
       document.title = `${name}，祝你新年快乐！`;
     }
 
-    // 分享祝福
+    // 分享
     function shareBlessing() {
       const name = document.getElementById('recipientName').textContent;
       const baseUrl = window.location.origin + window.location.pathname;
@@ -558,15 +527,7 @@
       });
     }
 
-    // 创建自己的祝福
-    function createOwn() {
-      document.getElementById('inputPage').style.display = 'block';
-      document.getElementById('blessingPage').style.display = 'none';
-      document.getElementById('nameInput').value = '';
-      document.title = '🐴 新春送福 | 马年大吉';
-    }
-
-    // 显示复制提示
+    // 复制提示
     function showCopyTip() {
       const tip = document.getElementById('copyTip');
       tip.classList.add('show');
@@ -574,9 +535,8 @@
     }
 
     // 初始化
-    createParticles();
+    createStars();
     createLanterns();
-    setInterval(createParticles, 6000);
   </script>
 </body>
 </html>
