@@ -6,16 +6,17 @@
   <title>新春快乐 2026</title>
   <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&display=swap');
+    
     :root {
-      --bg-dark: #0a0a0f;
-      --bg-card: #16161d;
-      --accent: #ff4757;
-      --accent-glow: rgba(255, 71, 87, 0.4);
-      --gold: #ffa502;
-      --gold-glow: rgba(255, 165, 2, 0.3);
+      --bg: #0d0d15;
+      --bg-glass: rgba(255, 255, 255, 0.03);
+      --accent: #ff6b6b;
+      --accent-light: #ff8e8e;
+      --gold: #ffd700;
+      --gold-dark: #e6a23c;
       --text: #ffffff;
-      --text-muted: rgba(255, 255, 255, 0.6);
-      --border: rgba(255, 255, 255, 0.08);
+      --text-secondary: rgba(255, 255, 255, 0.7);
     }
 
     * {
@@ -25,9 +26,9 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'PingFang SC', sans-serif;
+      font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
       min-height: 100vh;
-      background: var(--bg-dark);
+      background: var(--bg);
       color: var(--text);
       overflow-x: hidden;
     }
@@ -40,62 +41,82 @@
       overflow: hidden;
     }
 
-    .bg::before {
-      content: '';
+    .bg-glow {
       position: absolute;
       inset: -50%;
+      width: 200%;
+      height: 200%;
       background: 
-        radial-gradient(circle at 30% 20%, var(--accent-glow) 0%, transparent 40%),
-        radial-gradient(circle at 70% 80%, var(--gold-glow) 0%, transparent 40%),
-        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.02) 0%, transparent 60%);
-      animation: bgPulse 15s ease-in-out infinite;
+        radial-gradient(circle at 30% 25%, var(--accent) 0%, transparent 40%),
+        radial-gradient(circle at 70% 75%, var(--gold) 0%, transparent 40%);
+      animation: bgPulse 20s ease-in-out infinite;
     }
 
     @keyframes bgPulse {
-      0%, 100% { transform: scale(1) rotate(0deg); }
-      50% { transform: scale(1.1) rotate(3deg); }
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.1); }
     }
 
-    /* 星星粒子 */
-    .stars {
+    /* 马奔跑动画 */
+    .running-horses {
       position: absolute;
       inset: 0;
       pointer-events: none;
+      overflow: hidden;
     }
 
-    .star {
+    .horse {
       position: absolute;
-      width: 4px;
-      height: 4px;
-      background: #fff;
-      border-radius: 50%;
+      font-size: 48px;
       opacity: 0;
-      animation: twinkle 3s ease-in-out infinite;
+      animation: horseRun 8s linear infinite;
+      filter: drop-shadow(0 0 20px var(--gold));
     }
 
-    @keyframes twinkle {
-      0%, 100% { opacity: 0; transform: scale(0.5); }
-      50% { opacity: 0.8; transform: scale(1); }
+    @keyframes horseRun {
+      0% {
+        opacity: 0;
+        transform: translateX(-10%) rotate(-5deg);
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        transform: translateX(110%) rotate(5deg);
+      }
     }
 
-    /* 灯笼 */
-    .lanterns {
-      position: fixed;
+    /* 烟花 */
+    .fireworks {
+      position: absolute;
       inset: 0;
       pointer-events: none;
-      z-index: 1;
     }
 
-    .lantern {
+    .firework {
       position: absolute;
-      font-size: 28px;
-      animation: float 6s ease-in-out infinite;
-      filter: drop-shadow(0 0 20px var(--gold-glow));
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      animation: explode 2s ease-out infinite;
     }
 
-    @keyframes float {
-      0%, 100% { transform: translateY(0) rotate(-3deg); }
-      50% { transform: translateY(-10px) rotate(3deg); }
+    @keyframes explode {
+      0% {
+        transform: scale(0);
+        opacity: 1;
+      }
+      50% {
+        opacity: 1;
+      }
+      100% {
+        transform: scale(3);
+        opacity: 0;
+      }
     }
 
     /* 主容器 */
@@ -107,202 +128,270 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 24px;
+      padding: 20px;
     }
 
-    /* 输入页 */
+    /* 页面容器 */
     .page {
       width: 100%;
-      max-width: 360px;
+      max-width: 380px;
       text-align: center;
-      animation: fadeIn 0.6s ease-out;
+      animation: pageIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+    @keyframes pageIn {
+      from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
     }
 
     .page.hidden {
       display: none;
     }
 
-    .year-badge {
+    /* 马徽章 */
+    .horse-badge {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      background: linear-gradient(135deg, var(--accent), #ff6b81);
+      gap: 8px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-light));
       color: white;
-      padding: 8px 20px;
+      padding: 10px 24px;
       border-radius: 50px;
       font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 24px;
-      box-shadow: 0 8px 32px var(--accent-glow);
+      font-weight: 700;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 32px rgba(255, 107, 107, 0.3);
+      animation: badgeFloat 3s ease-in-out infinite;
     }
 
+    @keyframes badgeFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    /* 标题 */
     .title {
-      font-size: 42px;
-      font-weight: 800;
-      background: linear-gradient(135deg, #fff 0%, var(--gold) 100%);
+      font-size: 48px;
+      font-weight: 900;
+      background: linear-gradient(135deg, #fff 0%, var(--gold) 50%, #fff 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      letter-spacing: 4px;
-      margin-bottom: 8px;
+      letter-spacing: 3px;
+      margin-bottom: 12px;
+      animation: titleShine 3s ease-in-out infinite;
     }
 
+    @keyframes titleShine {
+      0%, 100% { filter: brightness(1); }
+      50% { filter: brightness(1.2); }
+    }
+
+    /* 年份 */
     .year {
-      font-size: 80px;
+      font-size: 96px;
       font-weight: 900;
-      background: linear-gradient(135deg, var(--gold), #ffbe76);
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      letter-spacing: 12px;
-      margin-bottom: 32px;
+      letter-spacing: 8px;
+      margin-bottom: 35px;
+      animation: yearPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes yearPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
     }
 
     .subtitle {
-      font-size: 14px;
-      color: var(--text-muted);
-      margin-bottom: 32px;
+      font-size: 15px;
+      color: var(--text-secondary);
+      margin-bottom: 35px;
+      animation: fadeIn 1s ease-out;
     }
 
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* 输入框 */
     .input-box {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
+      background: var(--bg-glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 24px;
-      padding: 28px;
+      padding: 32px;
+      animation: fadeIn 1s ease-out 0.3s;
     }
 
     .input-label {
-      color: var(--text-muted);
+      color: var(--text-secondary);
       font-size: 13px;
-      margin-bottom: 12px;
+      margin-bottom: 16px;
       display: block;
       text-align: left;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 2px;
+      font-weight: 500;
     }
 
     .name-input {
       width: 100%;
-      padding: 16px 18px;
+      padding: 18px 20px;
       font-size: 18px;
-      border: 2px solid var(--border);
-      border-radius: 14px;
-      background: rgba(255, 255, 255, 0.03);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.05);
       color: #fff;
       outline: none;
       text-align: center;
       transition: all 0.3s;
     }
 
-    .name-input::placeholder {
-      color: rgba(255, 255, 255, 0.25);
-    }
-
     .name-input:focus {
       border-color: var(--accent);
-      background: rgba(255, 71, 87, 0.05);
-      box-shadow: 0 0 0 4px var(--accent-glow);
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 0 4px var(--accent);
     }
 
-    .generate-btn {
-      margin-top: 16px;
+    .name-input::placeholder {
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* 按钮样式 */
+    .btn {
       width: 100%;
       padding: 18px 32px;
       font-size: 17px;
-      background: linear-gradient(135deg, var(--accent), #ff6b81);
-      color: white;
       border: none;
-      border-radius: 14px;
+      border-radius: 16px;
       cursor: pointer;
-      font-weight: 600;
+      font-weight: 700;
       transition: all 0.3s;
-      box-shadow: 0 8px 24px var(--accent-glow);
+    }
+
+    .generate-btn {
+      margin-top: 20px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-light));
+      color: white;
+      box-shadow: 0 8px 32px rgba(255, 107, 107, 0.4);
     }
 
     .generate-btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 16px 40px var(--accent-glow);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(255, 107, 107, 0.5);
     }
 
     .generate-btn:active {
-      transform: scale(0.98);
+      transform: translateY(-2px) scale(0.98);
     }
 
-    /* 祝福页 */
+    /* 祝福卡片 */
     .blessing-card {
-      background: linear-gradient(180deg, #1e1e28 0%, var(--bg-card) 100%);
-      border-radius: 28px;
-      padding: 40px 28px;
-      border: 1px solid var(--border);
+      background: linear-gradient(180deg, #1a1a2e 0%, #16161d 100%);
+      border-radius: 32px;
+      padding: 45px 32px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 32px 96px rgba(0, 0, 0, 0.4);
+      position: relative;
+      overflow: hidden;
     }
 
-    .horse-badge {
-      font-size: 52px;
-      margin-bottom: 12px;
+    .blessing-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 50% 50%, var(--gold) 0%, transparent 50%);
+      opacity: 0.1;
+      animation: cardGlow 4s ease-in-out infinite;
+    }
+
+    @keyframes cardGlow {
+      0%, 100% { opacity: 0.05; transform: translate(-25%, -25%) rotate(0deg); }
+      50% { opacity: 0.1; transform: translate(-25%, -25%) rotate(180deg); }
+    }
+
+    .horse-emoji {
+      font-size: 72px;
+      margin-bottom: 16px;
+      animation: emojiBounce 2s ease-in-out infinite;
+    }
+
+    @keyframes emojiBounce {
+      0%, 100% { transform: scale(1) rotate(-3deg); }
+      50% { transform: scale(1.1) rotate(3deg); }
     }
 
     .blessing-title {
       font-size: 20px;
-      color: var(--text-muted);
-      margin-bottom: 24px;
+      color: var(--text-secondary);
+      margin-bottom: 28px;
       font-weight: 500;
     }
 
     .recipient-name {
-      font-size: 38px;
-      font-weight: 800;
-      color: #fff;
-      margin-bottom: 28px;
-      word-break: break-all;
-      line-height: 1.3;
+      font-size: 44px;
+      font-weight: 900;
+      background: linear-gradient(135deg, #fff 0%, var(--gold) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 32px;
+      letter-spacing: 2px;
     }
 
     .wishes-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-bottom: 28px;
+      gap: 12px;
+      margin-bottom: 32px;
     }
 
     .wish-item {
-      background: linear-gradient(180deg, rgba(255, 71, 87, 0.15) 0%, rgba(255, 71, 87, 0.05) 100%);
-      border: 1px solid rgba(255, 71, 87, 0.2);
-      padding: 16px 8px;
-      border-radius: 16px;
-      color: #fff;
+      background: rgba(255, 107, 107, 0.15);
+      padding: 18px 12px;
+      border-radius: 20px;
       font-size: 12px;
-      font-weight: 500;
+      font-weight: 600;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 8px;
       transition: all 0.3s;
+      border: 1px solid rgba(255, 107, 107, 0.2);
     }
 
     .wish-item:hover {
-      transform: translateY(-4px);
+      transform: translateY(-4px) scale(1.05);
       border-color: var(--accent);
     }
 
     .wish-icon {
-      font-size: 26px;
+      font-size: 32px;
     }
 
     .blessing-text {
-      font-size: 15px;
-      color: var(--text-muted);
-      line-height: 1.9;
-      margin-bottom: 24px;
-      text-align: left;
+      font-size: 16px;
+      color: var(--text-secondary);
+      line-height: 2;
+      margin-bottom: 28px;
       background: rgba(255, 255, 255, 0.03);
-      padding: 20px;
-      border-radius: 16px;
-      border: 1px solid var(--border);
+      padding: 24px;
+      border-radius: 20px;
+      text-align: left;
     }
 
     .blessing-text .highlight {
@@ -311,52 +400,42 @@
     }
 
     .from-text {
-      font-size: 13px;
-      color: var(--text-muted);
-      margin-bottom: 20px;
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
     }
 
     .from-text span {
-      color: #fff;
-      font-weight: 600;
+      color: var(--gold);
+      font-weight: 700;
+    }
+
+    .action-btns {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
 
     .share-btn {
-      width: 100%;
-      padding: 16px 32px;
-      font-size: 15px;
       background: transparent;
-      color: var(--text);
-      border: 2px solid var(--border);
-      border-radius: 14px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.3s;
+      color: #fff;
+      border: 2px solid rgba(255, 255, 255, 0.2);
     }
 
     .share-btn:hover {
       border-color: var(--accent);
-      background: rgba(255, 71, 87, 0.1);
+      background: rgba(255, 255, 255, 0.05);
     }
 
     .save-btn {
-      width: 100%;
-      padding: 16px 32px;
-      font-size: 15px;
-      background: linear-gradient(135deg, var(--gold), #ffbe76);
-      color: #1a1a2e;
-      border: none;
-      border-radius: 14px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.3s;
-      margin-top: 12px;
-      box-shadow: 0 8px 24px var(--gold-glow);
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: var(--bg);
+      box-shadow: 0 8px 24px rgba(255, 215, 0, 0.4);
     }
 
     .save-btn:hover {
       transform: translateY(-3px);
-      box-shadow: 0 16px 40px var(--gold-glow);
+      box-shadow: 0 12px 36px rgba(255, 215, 0, 0.5);
     }
 
     .save-btn:disabled {
@@ -365,123 +444,142 @@
       transform: none;
     }
 
-    /* 图片预览弹窗 */
+    /* 预览弹窗 */
     .preview-modal {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.9);
+      background: rgba(0, 0, 0, 0.95);
       z-index: 1000;
       display: none;
       align-items: center;
       justify-content: center;
-      padding: 20px;
+      padding: 24px;
+      animation: modalIn 0.3s ease;
+    }
+
+    @keyframes modalIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
     .preview-modal.show {
       display: flex;
     }
 
-    .preview-content {
+    .preview-image {
       max-width: 100%;
-      max-height: 90vh;
-      border-radius: 16px;
-      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+      max-height: 85vh;
+      border-radius: 20px;
+      box-shadow: 0 32px 96px rgba(0, 0, 0, 0.6);
     }
 
     .preview-tip {
       position: fixed;
-      bottom: 40px;
+      bottom: 50px;
       left: 50%;
       transform: translateX(-50%);
-      background: var(--bg-card);
+      background: var(--bg-glass);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       color: #fff;
-      padding: 14px 28px;
+      padding: 14px 32px;
       border-radius: 50px;
       font-size: 14px;
-      border: 1px solid var(--border);
-      white-space: nowrap;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      animation: tipIn 0.3s ease;
+    }
+
+    @keyframes tipIn {
+      from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+      to { opacity: 1; transform: translateX(-50%) translateY(0); }
     }
 
     .preview-close {
       position: absolute;
-      top: 20px;
-      right: 20px;
-      width: 44px;
-      height: 44px;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
+      top: 30px;
+      right: 30px;
+      width: 48px;
+      height: 48px;
+      background: rgba(255, 255, 255, 0.1);
       border-radius: 50%;
       color: #fff;
-      font-size: 20px;
+      font-size: 24px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: all 0.3s;
     }
 
-    /* 复制提示 */
-    .copy-tip {
+    .preview-close:hover {
+      background: rgba(255, 107, 107, 0.3);
+      transform: scale(1.1);
+    }
+
+    /* 提示 */
+    .toast {
       position: fixed;
-      top: 50%;
+      top: 30px;
       left: 50%;
-      transform: translate(-50%, -50%);
-      background: var(--bg-card);
+      transform: translateX(-50%);
+      background: var(--bg-glass);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       color: #fff;
-      padding: 18px 32px;
-      border-radius: 16px;
-      font-size: 14px;
-      z-index: 1000;
+      padding: 14px 32px;
+      border-radius: 50px;
+      font-size: 15px;
+      z-index: 2000;
       display: none;
-      border: 1px solid var(--border);
-      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
-    .copy-tip.show {
+    .toast.show {
       display: block;
-      animation: pop 0.3s ease;
+      animation: toastIn 0.3s ease;
     }
 
-    @keyframes pop {
-      from { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
-      to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+      to { opacity: 1; transform: translateX(-50%) translateY(0); }
     }
 
     /* 响应式 */
-    @media (max-width: 400px) {
-      .title { font-size: 32px; }
-      .year { font-size: 56px; letter-spacing: 8px; }
-      .wishes-grid { gap: 8px; }
-      .wish-item { padding: 14px 6px; }
-      .wish-icon { font-size: 22px; }
-      .recipient-name { font-size: 30px; }
+    @media (max-width: 420px) {
+      .title { font-size: 36px; }
+      .year { font-size: 72px; }
+      .recipient-name { font-size: 34px; }
+      .wish-item { padding: 14px 10px; font-size: 11px; }
+      .wish-icon { font-size: 26px; }
+      .blessing-card { padding: 36px 24px; }
     }
   </style>
 </head>
 <body>
   <!-- 背景 -->
   <div class="bg">
-    <div class="stars" id="stars"></div>
+    <div class="bg-glow"></div>
+    <div class="fireworks" id="fireworks"></div>
+    <div class="running-horses" id="horses"></div>
   </div>
-  
-  <!-- 灯笼 -->
-  <div class="lanterns" id="lanterns"></div>
 
   <div class="container">
     <!-- 输入页 -->
     <div class="page" id="inputPage">
-      <div class="year-badge">
+      <div class="horse-badge">
         <span>🐴</span>
         <span>马年大吉</span>
       </div>
+      
+      <div class="title">新春送福</div>
       <div class="year">2026</div>
-      <h1 class="title">新春送福</h1>
       <p class="subtitle">输入名字，生成专属祝福</p>
       
       <div class="input-box">
         <label class="input-label">你的名字</label>
         <input type="text" class="name-input" id="nameInput" placeholder="请输入名字" maxlength="20">
-        <button class="generate-btn" onclick="generateBlessing()">
-          🧧 生成祝福
+        <button class="btn generate-btn" onclick="generateBlessing()">
+          ✨ 生成祝福
         </button>
       </div>
     </div>
@@ -489,7 +587,7 @@
     <!-- 祝福页 -->
     <div class="page hidden" id="blessingPage">
       <div class="blessing-card">
-        <div class="horse-badge">🐴✨</div>
+        <div class="horse-emoji">🐴✨</div>
         <div class="blessing-title">祝你新年快乐</div>
         <div class="recipient-name" id="recipientName"></div>
         
@@ -517,27 +615,30 @@
         </div>
         
         <div class="from-text">— 来自 <span id="senderName">丁林</span> 的祝福</div>
-        <button class="share-btn" onclick="shareBlessing()">
-          📤 发送给朋友
-        </button>
-        <button class="save-btn" onclick="saveAsImage()">
-          💾 保存图片到相册
-        </button>
+        
+        <div class="action-btns">
+          <button class="btn share-btn" onclick="shareBlessing()">
+            📤 发送给朋友
+          </button>
+          <button class="btn save-btn" onclick="saveAsImage()">
+            💾 保存图片到相册
+          </button>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- 图片预览弹窗 -->
+  <!-- 预览弹窗 -->
   <div class="preview-modal" id="previewModal">
     <button class="preview-close" onclick="closePreview()">×</button>
-    <img class="preview-content" id="previewImage">
+    <img class="preview-image" id="previewImage">
     <div class="preview-tip">长按图片保存到相册</div>
   </div>
 
-  <div class="copy-tip" id="copyTip">✨ 链接已复制，快分享给朋友吧！</div>
+  <!-- 提示 -->
+  <div class="toast" id="toast"></div>
 
   <script>
-    // URL参数
     const urlParams = new URLSearchParams(window.location.search);
     const recipientName = urlParams.get('name');
     const senderName = decodeURIComponent(urlParams.get('from')) || '丁林';
@@ -546,33 +647,44 @@
       showBlessing(recipientName, senderName);
     }
 
-    // 星星
-    function createStars() {
-      const container = document.getElementById('stars');
-      for (let i = 0; i < 30; i++) {
-        const star = document.createElement('div');
-        star.className = 'star';
-        star.style.left = Math.random() * 100 + '%';
-        star.style.top = Math.random() * 100 + '%';
-        star.style.animationDelay = Math.random() * 3 + 's';
-        star.style.width = star.style.height = (Math.random() * 3 + 2) + 'px';
-        container.appendChild(star);
+    // 创建烟花
+    function createFireworks() {
+      const container = document.getElementById('fireworks');
+      const colors = ['#ff6b6b', '#ffd700', '#ff8e8e', '#ffbe76', '#fff'];
+      
+      for (let i = 0; i < 40; i++) {
+        setTimeout(() => {
+          const firework = document.createElement('div');
+          firework.className = 'firework';
+          firework.style.left = Math.random() * 100 + '%';
+          firework.style.top = Math.random() * 100 + '%';
+          firework.style.background = colors[Math.floor(Math.random() * colors.length)];
+          firework.style.animationDuration = (Math.random() * 1.5 + 1) + 's';
+          firework.style.animationDelay = Math.random() * 3 + 's';
+          container.appendChild(firework);
+          
+          setTimeout(() => firework.remove(), 5000);
+        }, i * 150);
       }
     }
 
-    // 灯笼
-    function createLanterns() {
-      const container = document.getElementById('lanterns');
-      const lanterns = ['🏮', '🧧', '🎏'];
+    // 创建奔跑的骏马
+    function createHorses() {
+      const container = document.getElementById('horses');
+      const horses = ['🐴', '🐎', '🦄'];
       
-      for (let i = 0; i < 10; i++) {
-        const lantern = document.createElement('div');
-        lantern.className = 'lantern';
-        lantern.textContent = lanterns[i % lanterns.length];
-        lantern.style.left = (Math.random() * 90 + 5) + '%';
-        lantern.style.top = (Math.random() * 40 + 8) + '%';
-        lantern.style.animationDelay = Math.random() * 3 + 's';
-        container.appendChild(lantern);
+      for (let i = 0; i < 6; i++) {
+        setTimeout(() => {
+          const horse = document.createElement('div');
+          horse.className = 'horse';
+          horse.textContent = horses[i % horses.length];
+          horse.style.top = (10 + Math.random() * 80) + '%';
+          horse.style.fontSize = (32 + Math.random() * 24) + 'px';
+          horse.style.animationDuration = (6 + Math.random() * 4) + 's';
+          horse.style.animationDelay = Math.random() * 3 + 's';
+          horse.style.animationDelay = i * 1.5 + 's';
+          container.appendChild(horse);
+        }, i * 1200);
       }
     }
 
@@ -580,7 +692,7 @@
     function generateBlessing() {
       const name = document.getElementById('nameInput').value.trim();
       if (!name) {
-        alert('请输入你的名字~');
+        showToast('请输入你的名字~');
         return;
       }
       
@@ -588,7 +700,7 @@
       const shareUrl = `${baseUrl}?name=${encodeURIComponent(name)}&from=${encodeURIComponent('丁林')}`;
       
       navigator.clipboard.writeText(shareUrl).then(() => {
-        showCopyTip();
+        showToast('✨ 链接已复制！');
         showBlessing(name, '丁林');
       }).catch(() => {
         showBlessing(name, '丁林');
@@ -603,6 +715,12 @@
       document.getElementById('nameHighlight').textContent = name;
       document.getElementById('senderName').textContent = sender;
       document.title = `${name}，祝你新年快乐！`;
+      
+      // 更多动画元素
+      setTimeout(() => {
+        createFireworks();
+        createHorses();
+      }, 300);
     }
 
     // 分享
@@ -612,7 +730,7 @@
       const shareUrl = `${baseUrl}?name=${encodeURIComponent(name)}&from=${encodeURIComponent('丁林')}`;
       
       navigator.clipboard.writeText(shareUrl).then(() => {
-        showCopyTip();
+        showToast('📤 链接已复制！');
       }).catch(() => {
         prompt('复制以下链接：', shareUrl);
       });
@@ -627,38 +745,28 @@
       try {
         const blessingCard = document.querySelector('.blessing-card');
         
-        // 隐藏按钮再截图
         const btns = blessingCard.querySelectorAll('button');
         btns.forEach(b => b.style.display = 'none');
         
-        // 添加临时背景色
         const originalBg = blessingCard.style.background;
-        blessingCard.style.background = 'linear-gradient(180deg, #1e1e28 0%, #16161d 100%)';
+        blessingCard.style.background = 'linear-gradient(180deg, #1a1a2e 0%, #16161d 100%)';
         
         const canvas = await html2canvas(blessingCard, {
-          scale: 2,
-          backgroundColor: '#16161d',
+          scale: 2.5,
+          backgroundColor: '#0d0d15',
           useCORS: true,
           logging: false
         });
         
-        // 恢复按钮
         btns.forEach(b => b.style.display = '');
         blessingCard.style.background = originalBg;
         
-        // 显示预览
         const dataUrl = canvas.toDataURL('image/png');
         document.getElementById('previewImage').src = dataUrl;
         document.getElementById('previewModal').classList.add('show');
         
-        // 自动下载
-        // const link = document.createElement('a');
-        // link.download = '新年祝福.png';
-        // link.href = dataUrl;
-        // link.click();
-        
       } catch (err) {
-        alert('生成图片失败，请重试');
+        showToast('生成图片失败，请重试');
         console.error(err);
       }
       
@@ -671,21 +779,29 @@
       document.getElementById('previewModal').classList.remove('show');
     }
 
-    // 点击背景关闭预览
+    // 点击背景关闭
     document.getElementById('previewModal').addEventListener('click', function(e) {
       if (e.target === this) closePreview();
     });
 
-    // 复制提示
-    function showCopyTip() {
-      const tip = document.getElementById('copyTip');
-      tip.classList.add('show');
-      setTimeout(() => tip.classList.remove('show'), 2500);
+    // 显示提示
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
     }
 
     // 初始化
-    createStars();
-    createLanterns();
+    createFireworks();
+    createHorses();
+    setInterval(createFireworks, 5000);
+    setInterval(() => {
+      const container = document.getElementById('horses');
+      if (container.children.length < 6) {
+        createHorses();
+      }
+    }, 10000);
   </script>
 </body>
 </html>
