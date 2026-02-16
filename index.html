@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>🐲 新春送福 | 给您拜年啦</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      overflow-x: hidden;
+    }
+
+    /* 烟花容器 */
+    .fireworks {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .firework {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      animation: firework 2s ease-out infinite;
+    }
+
+    @keyframes firework {
+      0% {
+        transform: translateY(100vh) scale(0);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100px) scale(1);
+        opacity: 0;
+      }
+    }
+
+    /* 灯笼 */
+    .lanterns {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .lantern {
+      position: absolute;
+      font-size: 40px;
+      animation: swing 3s ease-in-out infinite;
+    }
+
+    @keyframes swing {
+      0%, 100% { transform: rotate(-5deg); }
+      50% { transform: rotate(5deg); }
+    }
+
+    /* 主容器 */
+    .container {
+      position: relative;
+      z-index: 10;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    /* 输入页面 */
+    .input-page {
+      text-align: center;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .title {
+      font-size: 36px;
+      color: #ffd700;
+      text-shadow: 2px 2px 8px rgba(255, 215, 0, 0.5);
+      margin-bottom: 10px;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .subtitle {
+      font-size: 18px;
+      color: #fff;
+      margin-bottom: 40px;
+      opacity: 0.9;
+    }
+
+    .year {
+      font-size: 72px;
+      color: #ff4444;
+      font-weight: bold;
+      text-shadow: 3px 3px 0 #ffd700, 6px 6px 0 #ff6b6b;
+      margin-bottom: 30px;
+      animation: bounce 1s ease-in-out infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .input-box {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 30px;
+      border: 2px solid rgba(255, 215, 0, 0.3);
+    }
+
+    .input-label {
+      color: #ffd700;
+      font-size: 18px;
+      margin-bottom: 15px;
+      display: block;
+    }
+
+    .name-input {
+      width: 100%;
+      padding: 15px 20px;
+      font-size: 18px;
+      border: 2px solid #ffd700;
+      border-radius: 50px;
+      background: rgba(255, 255, 255, 0.9);
+      outline: none;
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .name-input:focus {
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+    }
+
+    .generate-btn {
+      margin-top: 20px;
+      padding: 15px 40px;
+      font-size: 18px;
+      background: linear-gradient(135deg, #ff4444, #ff6b6b);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 5px 20px rgba(255, 68, 68, 0.4);
+    }
+
+    .generate-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(255, 68, 68, 0.6);
+    }
+
+    .generate-btn:active {
+      transform: translateY(0);
+    }
+
+    /* 祝福页面 */
+    .blessing-page {
+      display: none;
+      text-align: center;
+      width: 100%;
+      max-width: 450px;
+    }
+
+    .blessing-card {
+      background: linear-gradient(135deg, #ff4444, #ff6b6b);
+      border-radius: 30px;
+      padding: 40px 30px;
+      box-shadow: 0 20px 60px rgba(255, 68, 68, 0.4);
+      border: 3px solid #ffd700;
+    }
+
+    .blessing-title {
+      font-size: 28px;
+      color: #ffd700;
+      margin-bottom: 20px;
+    }
+
+    .recipient-name {
+      font-size: 42px;
+      color: #fff;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      margin-bottom: 30px;
+      word-break: break-all;
+    }
+
+    .blessing-text {
+      font-size: 20px;
+      color: #fff;
+      line-height: 1.8;
+      margin-bottom: 30px;
+    }
+
+    .blessing-text .highlight {
+      color: #ffd700;
+      font-weight: bold;
+    }
+
+    .from-text {
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 20px;
+    }
+
+    .share-btn {
+      padding: 12px 30px;
+      font-size: 16px;
+      background: #ffd700;
+      color: #ff4444;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s;
+    }
+
+    .share-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .create-own {
+      margin-top: 30px;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 14px;
+    }
+
+    .create-own a {
+      color: #ffd700;
+      text-decoration: none;
+    }
+
+    /* 装饰元素 */
+    .decorations {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .deco {
+      position: absolute;
+      font-size: 30px;
+    }
+
+    /* 响应式 */
+    @media (max-width: 480px) {
+      .title { font-size: 28px; }
+      .year { font-size: 56px; }
+      .subtitle { font-size: 16px; }
+      .recipient-name { font-size: 32px; }
+      .blessing-text { font-size: 18px; }
+    }
+
+    /* 复制链接提示 */
+    .copy-tip {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.8);
+      color: #fff;
+      padding: 20px 40px;
+      border-radius: 10px;
+      font-size: 16px;
+      z-index: 1000;
+      display: none;
+    }
+
+    .copy-tip.show {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+      to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <!-- 烟花 -->
+  <div class="fireworks" id="fireworks"></div>
+  
+  <!-- 灯笼 -->
+  <div class="lanterns" id="lanterns"></div>
+
+  <div class="container">
+    <!-- 输入页面 -->
+    <div class="input-page" id="inputPage">
+      <div class="year">2026</div>
+      <h1 class="title">🐲 新春送福</h1>
+      <p class="subtitle">输入您的名字，生成专属拜年祝福</p>
+      
+      <div class="input-box">
+        <label class="input-label">请输入您的名字</label>
+        <input type="text" class="name-input" id="nameInput" placeholder="比如：张三" maxlength="20">
+        <button class="generate-btn" onclick="generateBlessing()">生成祝福 🧧</button>
+      </div>
+    </div>
+
+    <!-- 祝福页面 -->
+    <div class="blessing-page" id="blessingPage">
+      <div class="blessing-card">
+        <div class="blessing-title">🎊 新春祝福 🎊</div>
+        <div class="recipient-name" id="recipientName"></div>
+        <div class="blessing-text">
+          新春到，<span class="highlight">福气到</span>！<br><br>
+          愿您新的一年<br>
+          <span class="highlight">身体健康</span> 🏃‍♂️<br>
+          <span class="highlight">财源广进</span> 💰<br>
+          <span class="highlight">心想事成</span> ✨<br>
+          <span class="highlight">万事如意</span> 🎉<br><br>
+          🐲 龙年大吉大利！
+        </div>
+        <div class="from-text">— 来自 <span id="senderName"></span> 的祝福</div>
+        <button class="share-btn" onclick="shareBlessing()">发送给朋友</button>
+      </div>
+      <div class="create-own">
+        <a href="#" onclick="createOwn()">← 创建自己的祝福</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="copy-tip" id="copyTip">链接已复制！快分享给朋友吧~</div>
+
+  <script>
+    // 获取URL参数
+    const urlParams = new URLSearchParams(window.location.search);
+    const recipientName = urlParams.get('name');
+    const senderName = urlParams.get('from') || '神秘好友';
+
+    // 如果有名字参数，显示祝福页面
+    if (recipientName) {
+      showBlessing(recipientName, senderName);
+    }
+
+    // 创建烟花
+    function createFireworks() {
+      const container = document.getElementById('fireworks');
+      const colors = ['#ff4444', '#ffd700', '#ff6b6b', '#ffa500', '#fff'];
+      
+      for (let i = 0; i < 30; i++) {
+        setTimeout(() => {
+          const firework = document.createElement('div');
+          firework.className = 'firework';
+          firework.style.left = Math.random() * 100 + '%';
+          firework.style.background = colors[Math.floor(Math.random() * colors.length)];
+          firework.style.animationDuration = (Math.random() * 2 + 1) + 's';
+          firework.style.animationDelay = Math.random() * 2 + 's';
+          container.appendChild(firework);
+          
+          setTimeout(() => firework.remove(), 4000);
+        }, i * 200);
+      }
+    }
+
+    // 创建灯笼
+    function createLanterns() {
+      const container = document.getElementById('lanterns');
+      const lanterns = ['🏮', '🎏', '🧧'];
+      
+      for (let i = 0; i < 12; i++) {
+        const lantern = document.createElement('div');
+        lantern.className = 'lantern';
+        lantern.textContent = lanterns[i % lanterns.length];
+        lantern.style.left = (Math.random() * 90 + 5) + '%';
+        lantern.style.top = (Math.random() * 60 + 10) + '%';
+        lantern.style.animationDelay = Math.random() * 2 + 's';
+        container.appendChild(lantern);
+      }
+    }
+
+    // 生成祝福
+    function generateBlessing() {
+      const name = document.getElementById('nameInput').value.trim();
+      if (!name) {
+        alert('请输入您的名字~');
+        return;
+      }
+      
+      // 生成专属链接
+      const baseUrl = window.location.origin + window.location.pathname;
+      const shareUrl = `${baseUrl}?name=${encodeURIComponent(name)}`;
+      
+      // 复制链接
+      navigator.clipboard.writeText(shareUrl).then(() => {
+        showCopyTip();
+        // 同时显示祝福预览
+        showBlessing(name, name);
+      }).catch(() => {
+        // 如果复制失败，直接显示祝福
+        showBlessing(name, name);
+      });
+    }
+
+    // 显示祝福页面
+    function showBlessing(name, sender) {
+      document.getElementById('inputPage').style.display = 'none';
+      document.getElementById('blessingPage').style.display = 'block';
+      document.getElementById('recipientName').textContent = name;
+      document.getElementById('senderName').textContent = sender;
+      document.title = `${name}给您拜年啦！`;
+    }
+
+    // 分享祝福
+    function shareBlessing() {
+      const name = document.getElementById('recipientName').textContent;
+      const baseUrl = window.location.origin + window.location.pathname;
+      const shareUrl = `${baseUrl}?name=${encodeURIComponent(name)}`;
+      
+      navigator.clipboard.writeText(shareUrl).then(() => {
+        showCopyTip();
+      }).catch(() => {
+        prompt('复制以下链接分享给朋友：', shareUrl);
+      });
+    }
+
+    // 创建自己的祝福
+    function createOwn() {
+      document.getElementById('inputPage').style.display = 'block';
+      document.getElementById('blessingPage').style.display = 'none';
+      document.getElementById('nameInput').value = '';
+      document.title = '🐲 新春送福 | 给您拜年啦';
+    }
+
+    // 显示复制提示
+    function showCopyTip() {
+      const tip = document.getElementById('copyTip');
+      tip.classList.add('show');
+      setTimeout(() => {
+        tip.classList.remove('show');
+      }, 2000);
+    }
+
+    // 初始化
+    createFireworks();
+    createLanterns();
+
+    // 定期创建烟花
+    setInterval(createFireworks, 5000);
+  </script>
+</body>
+</html>
