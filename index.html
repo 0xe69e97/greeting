@@ -431,6 +431,24 @@
       background: linear-gradient(135deg, var(--gold), var(--gold-dark));
       color: var(--bg);
       box-shadow: 0 8px 24px rgba(255, 215, 0, 0.4);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .save-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      animation: saveBtnShine 2s infinite;
+    }
+
+    @keyframes saveBtnShine {
+      0% { left: -100%; }
+      50%, 100% { left: 100%; }
     }
 
     .save-btn:hover {
@@ -444,6 +462,27 @@
       transform: none;
     }
 
+    /* 加载动画 */
+    .save-btn.loading {
+      pointer-events: none;
+    }
+
+    .save-btn .spinner {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(0,0,0,0.2);
+      border-top-color: var(--bg);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
     /* 预览弹窗 */
     .preview-modal {
       position: fixed;
@@ -455,6 +494,8 @@
       justify-content: center;
       padding: 24px;
       animation: modalIn 0.3s ease;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
 
     @keyframes modalIn {
@@ -466,16 +507,63 @@
       display: flex;
     }
 
+    .preview-content {
+      position: relative;
+      max-width: 90%;
+      max-height: 90vh;
+      animation: previewContentIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes previewContentIn {
+      from { 
+        opacity: 0;
+        transform: scale(0.9) translateY(20px);
+      }
+      to { 
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
     .preview-image {
       max-width: 100%;
       max-height: 85vh;
       border-radius: 20px;
       box-shadow: 0 32px 96px rgba(0, 0, 0, 0.6);
+      display: block;
+    }
+
+    .preview-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .preview-download-btn {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: var(--bg);
+      border: none;
+      padding: 14px 32px;
+      border-radius: 50px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s;
+      box-shadow: 0 8px 24px rgba(255, 215, 0, 0.4);
+    }
+
+    .preview-download-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 36px rgba(255, 215, 0, 0.5);
     }
 
     .preview-tip {
       position: fixed;
-      bottom: 50px;
+      bottom: 40px;
       left: 50%;
       transform: translateX(-50%);
       background: var(--bg-glass);
@@ -487,6 +575,7 @@
       font-size: 14px;
       border: 1px solid rgba(255, 255, 255, 0.2);
       animation: tipIn 0.3s ease;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     }
 
     @keyframes tipIn {
@@ -496,19 +585,20 @@
 
     .preview-close {
       position: absolute;
-      top: 30px;
-      right: 30px;
-      width: 48px;
-      height: 48px;
+      top: -50px;
+      right: 0;
+      width: 40px;
+      height: 40px;
       background: rgba(255, 255, 255, 0.1);
       border-radius: 50%;
       color: #fff;
-      font-size: 24px;
+      font-size: 20px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       transition: all 0.3s;
+      border: 1px solid rgba(255,255,255,0.2);
     }
 
     .preview-close:hover {
@@ -522,7 +612,7 @@
       top: 30px;
       left: 50%;
       transform: translateX(-50%);
-      background: var(--bg-glass);
+      background: linear-gradient(135deg, rgba(255,107,107,0.95), rgba(255,142,142,0.95));
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       color: #fff;
@@ -531,7 +621,9 @@
       font-size: 15px;
       z-index: 2000;
       display: none;
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255,255,255,0.2);
+      box-shadow: 0 8px 32px rgba(255, 107, 107, 0.4);
+      font-weight: 600;
     }
 
     .toast.show {
@@ -542,6 +634,11 @@
     @keyframes toastIn {
       from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
       to { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+
+    .toast.success {
+      background: linear-gradient(135deg, rgba(76,175,80,0.95), rgba(129,199,132,0.95));
+      box-shadow: 0 8px 32px rgba(76, 175, 80, 0.4);
     }
 
     /* 响应式 */
@@ -630,9 +727,16 @@
 
   <!-- 预览弹窗 -->
   <div class="preview-modal" id="previewModal">
-    <button class="preview-close" onclick="closePreview()">×</button>
-    <img class="preview-image" id="previewImage">
-    <div class="preview-tip">长按图片保存到相册</div>
+    <div class="preview-content">
+      <button class="preview-close" onclick="closePreview()">×</button>
+      <img class="preview-image" id="previewImage">
+      <div class="preview-actions">
+        <button class="preview-download-btn" onclick="downloadImage()">
+          ⬇️ 保存到相册
+        </button>
+      </div>
+    </div>
+    <div class="preview-tip">💡 点击按钮保存或长按图片保存</div>
   </div>
 
   <!-- 提示 -->
@@ -740,7 +844,8 @@
     async function saveAsImage() {
       const btn = document.querySelector('.save-btn');
       btn.disabled = true;
-      btn.textContent = '⏳ 生成中...';
+      btn.classList.add('loading');
+      btn.innerHTML = '<span class="spinner"></span>生成图片中...';
       
       try {
         const blessingCard = document.querySelector('.blessing-card');
@@ -752,10 +857,12 @@
         blessingCard.style.background = 'linear-gradient(180deg, #1a1a2e 0%, #16161d 100%)';
         
         const canvas = await html2canvas(blessingCard, {
-          scale: 2.5,
+          scale: 3,  // 提高清晰度
           backgroundColor: '#0d0d15',
           useCORS: true,
-          logging: false
+          logging: false,
+          imageTimeout: 0,
+          allowTaint: true
         });
         
         btns.forEach(b => b.style.display = '');
@@ -765,13 +872,40 @@
         document.getElementById('previewImage').src = dataUrl;
         document.getElementById('previewModal').classList.add('show');
         
+        // 保存 dataUrl 到全局变量供下载使用
+        window.currentImageData = dataUrl;
+        
       } catch (err) {
         showToast('生成图片失败，请重试');
         console.error(err);
       }
       
       btn.disabled = false;
-      btn.textContent = '💾 保存图片到相册';
+      btn.classList.remove('loading');
+      btn.innerHTML = '💾 保存图片到相册';
+    }
+
+    // 下载图片
+    function downloadImage() {
+      const dataUrl = window.currentImageData;
+      if (!dataUrl) {
+        showToast('请先生成图片');
+        return;
+      }
+      
+      // 生成文件名
+      const name = document.getElementById('recipientName').textContent || '祝福';
+      const filename = `新春祝福_${name}_2026.png`;
+      
+      // 创建下载链接
+      const link = document.createElement('a');
+      link.download = filename;
+      link.href = dataUrl;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      showToast('✨ 图片已保存！');
     }
 
     // 关闭预览
