@@ -353,13 +353,14 @@
       letter-spacing: 2px;
     }
 
-    /* canvas 模式 - 纯色 */
+    /* canvas 模式 - 使用系统字体确保兼容性 */
     .recipient-name.canvas-mode {
       background: none !important;
       -webkit-background-clip: initial !important;
       background-clip: initial !important;
       color: #ffd700 !important;
       -webkit-text-fill-color: #ffd700 !important;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif !important;
     }
 
     .wishes-grid {
@@ -857,6 +858,9 @@
       btn.innerHTML = '<span class="spinner"></span>生成图片中...';
       
       try {
+        // 等待字体加载
+        await document.fonts.ready;
+        
         const blessingCard = document.querySelector('.blessing-card');
         
         const btns = blessingCard.querySelectorAll('button');
@@ -865,12 +869,26 @@
         const originalBg = blessingCard.style.background;
         blessingCard.style.background = 'linear-gradient(180deg, #1a1a2e 0%, #16161d 100%)';
         
-        // 修复渐变文字在 canvas 中的显示问题 - 添加 class
+        // 修复渐变文字在 canvas 中的显示问题 - 临时用系统字体
         const recipientName = document.getElementById('recipientName');
+        const originalFontFamily = recipientName.style.fontFamily;
+        recipientName.style.fontFamily = '-apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif';
         recipientName.classList.add('canvas-mode');
         
         const canvas = await html2canvas(blessingCard, {
           scale: 3,
+          backgroundColor: '#0d0d15',
+          useCORS: true,
+          logging: false,
+          imageTimeout: 0,
+          allowTaint: true
+        });
+        
+        // 恢复
+        btns.forEach(b => b.style.display = '');
+        blessingCard.style.background = originalBg;
+        recipientName.style.fontFamily = originalFontFamily;
+        recipientName.classList.remove('canvas-mode');
           backgroundColor: '#0d0d15',
           useCORS: true,
           logging: false,
