@@ -889,17 +889,6 @@
         blessingCard.style.background = originalBg;
         recipientName.style.fontFamily = originalFontFamily;
         recipientName.classList.remove('canvas-mode');
-          backgroundColor: '#0d0d15',
-          useCORS: true,
-          logging: false,
-          imageTimeout: 0,
-          allowTaint: true
-        });
-        
-        // 恢复
-        btns.forEach(b => b.style.display = '');
-        blessingCard.style.background = originalBg;
-        recipientName.classList.remove('canvas-mode');
         
         const dataUrl = canvas.toDataURL('image/png');
         document.getElementById('previewImage').src = dataUrl;
