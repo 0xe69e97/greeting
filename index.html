@@ -353,6 +353,15 @@
       letter-spacing: 2px;
     }
 
+    /* canvas 模式 - 纯色 */
+    .recipient-name.canvas-mode {
+      background: none !important;
+      -webkit-background-clip: initial !important;
+      background-clip: initial !important;
+      color: #ffd700 !important;
+      -webkit-text-fill-color: #ffd700 !important;
+    }
+
     .wishes-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -856,8 +865,12 @@
         const originalBg = blessingCard.style.background;
         blessingCard.style.background = 'linear-gradient(180deg, #1a1a2e 0%, #16161d 100%)';
         
+        // 修复渐变文字在 canvas 中的显示问题 - 添加 class
+        const recipientName = document.getElementById('recipientName');
+        recipientName.classList.add('canvas-mode');
+        
         const canvas = await html2canvas(blessingCard, {
-          scale: 3,  // 提高清晰度
+          scale: 3,
           backgroundColor: '#0d0d15',
           useCORS: true,
           logging: false,
@@ -865,8 +878,10 @@
           allowTaint: true
         });
         
+        // 恢复
         btns.forEach(b => b.style.display = '');
         blessingCard.style.background = originalBg;
+        recipientName.classList.remove('canvas-mode');
         
         const dataUrl = canvas.toDataURL('image/png');
         document.getElementById('previewImage').src = dataUrl;
