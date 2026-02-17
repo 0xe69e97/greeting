@@ -472,6 +472,19 @@
       transform: none;
     }
 
+    .back-btn {
+      background: transparent;
+      color: rgba(255, 255, 255, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      margin-top: 8px;
+    }
+
+    .back-btn:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.4);
+      color: #fff;
+    }
+
     /* 加载动画 */
     .save-btn.loading {
       pointer-events: none;
@@ -730,6 +743,9 @@
           <button class="btn save-btn" onclick="saveAsImage()">
             💾 保存图片到相册
           </button>
+          <button class="btn back-btn" onclick="goBack()">
+            🔙 重新生成
+          </button>
         </div>
       </div>
     </div>
@@ -933,6 +949,14 @@
     // 关闭预览
     function closePreview() {
       document.getElementById('previewModal').classList.remove('show');
+    }
+
+    // 返回首页
+    function goBack() {
+      document.getElementById('blessingPage').classList.add('hidden');
+      document.getElementById('inputPage').classList.remove('hidden');
+      document.getElementById('nameInput').value = '';
+      document.title = '新春快乐 2026';
     }
 
     // 点击背景关闭
